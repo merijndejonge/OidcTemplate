@@ -1,0 +1,15 @@
+﻿@using OpenSoftware.OidcTemplate.Client.ViewComponents
+@model AppSettingsViewComponentModel
+
+<script>
+    var oidcTemplateAppSettings = {
+        BaseUrls : {
+            Api: "@Model.ApiUrl",
+            Auth: "@Model.AuthUrl",
+            Web: "@Model.WebUrl"
+        },
+        AccessToken: "@Model.AccessToken",
+        UserFullName: "@Model.UserFullName",
+        UserEmail: "@Model.UserEmail"
+    }
+</script>
