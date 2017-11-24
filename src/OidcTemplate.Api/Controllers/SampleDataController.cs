@@ -8,14 +8,14 @@ using OpenSoftware.OidcTemplate.Domain.Authentication;
 namespace OpenSoftware.OidcTemplate.Api.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = DomainPolicies.Merchant)]
+    [Authorize(Policy = DomainPolicies.NormalUser)]
     public class SampleDataController : Controller
     {
         private static readonly string[] Summaries = {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        [Authorize(Policy = DomainPolicies.Merchant)]
+        [Authorize(Policy = DomainPolicies.NormalUser)]
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecasts()
         {

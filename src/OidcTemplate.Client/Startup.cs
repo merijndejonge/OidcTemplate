@@ -59,8 +59,8 @@ namespace OpenSoftware.OidcTemplate.Client
                     
                     options.Scope.Add(domainSettings.Api.Id);
                     options.Scope.Add(DomainScopes.Roles);
-                    options.Scope.Add(DomainScopes.Merchant);
-                    options.Scope.Add(DomainScopes.MerchantApiKeys);
+                    options.Scope.Add(DomainScopes.MvcClientUser);
+                    options.Scope.Add(DomainScopes.ApiKeys);
 
                     options.Events = new OpenIdConnectEvents
                     {

@@ -15,16 +15,16 @@ namespace OpenSoftware.OidcTemplate.Domain.Authentication
                 new IdentityResources.Email(),
                 new IdentityResource
                 {
-                    Name =DomainScopes.Merchant,
-                    DisplayName = "Merchant Info",
+                    Name = DomainScopes.MvcClientUser,
+                    DisplayName = "MVC client user",
                     Description = "Basic resource, to be adjusted for your application",
                     UserClaims = new List<string>
                     {
-                        DomainClaimTypes.TestSubmerchantId,
-                        DomainClaimTypes.LiveSubmerchantId,
+                        DomainClaimTypes.TestUserId,
+                        DomainClaimTypes.LiveUserId,
                         DomainClaimTypes.LiveEnabled,
-                        DomainClaimTypes.MerchantId,
-                        DomainClaimTypes.MerchantName
+                        DomainClaimTypes.SomeClaim,
+                        DomainClaimTypes.AnotherClaim
                     }
                 },
                 new IdentityResource(DomainScopes.Roles, new List<string> {DomainClaimTypes.Role})
@@ -43,10 +43,10 @@ namespace OpenSoftware.OidcTemplate.Domain.Authentication
                     ApiSecrets = new List<Secret> {new Secret(api.Secret.Sha256())},
                     UserClaims = new List<string>
                     {
-                        DomainClaimTypes.TestSubmerchantId,
-                        DomainClaimTypes.LiveSubmerchantId,
+                        DomainClaimTypes.TestUserId,
+                        DomainClaimTypes.LiveUserId,
                         DomainClaimTypes.LiveEnabled,
-                        DomainClaimTypes.MerchantId
+                        DomainClaimTypes.SomeClaim
                     },
                     Scopes = new List<Scope>
                     {
@@ -54,9 +54,9 @@ namespace OpenSoftware.OidcTemplate.Domain.Authentication
                         new Scope(DomainScopes.Roles, new List<string>{DomainClaimTypes.Role}),
                         new Scope
                         {
-                            Name = DomainScopes.MerchantApiKeys,
-                            DisplayName = "Merchant API Keys",
-                            Description = "Access to the Merchant ID, Publishable key and Secret Key"
+                            Name = DomainScopes.ApiKeys,
+                            DisplayName = "API Keys",
+                            Description = "Access to the API keys."
                         }
                     }
                 }

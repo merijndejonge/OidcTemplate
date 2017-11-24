@@ -81,8 +81,8 @@ namespace OpenSoftware.OidcTemplate.Api
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(DomainPolicies.Merchant,
-                    policy => policy.RequireClaim(JwtClaimTypes.Scope, DomainScopes.MerchantApiKeys));
+                options.AddPolicy(DomainPolicies.NormalUser,
+                    policy => policy.RequireClaim(JwtClaimTypes.Scope, DomainScopes.MvcClientUser));
                 options.AddPolicy(DomainPolicies.Admin, policy => policy.RequireClaim(JwtClaimTypes.Role, DomainRoles.Admin));
             });
         }

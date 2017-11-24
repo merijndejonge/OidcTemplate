@@ -9,6 +9,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using OpenSoftware.OidcTemplate.Data;
+using OpenSoftware.OidcTemplate.Domain.Authentication;
 using OpenSoftware.OidcTemplate.Domain.Entities;
 
 namespace OpenSoftware.OidcTemplate.Auth.Configuration
@@ -33,25 +34,19 @@ namespace OpenSoftware.OidcTemplate.Auth.Configuration
 
             var userData = _context.Users.FirstOrDefault(x => x.Id == applicationUser.Id);
 
-            //if (userData?.Merchant?.SubMerchants.FirstOrDefault(x => !x.IsLive) == null
-            //    || userData?.Merchant?.SubMerchants.FirstOrDefault(x => x.IsLive) == null)
-            //{
-            //    throw new NullReferenceException($"USer with id: {user.Id} does not have both a test and a live merchant.");
-            //}
-
             var userName = userData.FirstName.IsNullOrEmpty() || userData.LastName.IsNullOrEmpty()
                 ? userData.Email
                 : $"{userData.FirstName} {userData.LastName}";
-            var merchantClaims = new List<Claim>
+            var userClaims = new List<Claim>
             {
-                new Claim("test_submerchant_id", "some test_submerchant_id"),
-                new Claim("live_submerchant_id","some live_submerchant_id"),
-                new Claim("live_enabled", "some live_enabled"),
-                new Claim("merchant_id", "some merchant_id"),
-                new Claim("merchant_name", "some merchant_name"),
+                new Claim(DomainClaimTypes.TestUserId, "some test_user_id"),
+                new Claim(DomainClaimTypes.LiveUserId,"some live_user_id"),
+                new Claim(DomainClaimTypes.LiveEnabled, "true"),
+                new Claim(DomainClaimTypes.SomeClaim, "some_claim value"),
+                new Claim(DomainClaimTypes.AnotherClaim, "another_claim value"),
                 new Claim("name", userName)
             };
-            claims.AddRange(merchantClaims);
+            claims.AddRange(userClaims);
 
             return claims;
         }

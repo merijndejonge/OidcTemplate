@@ -3,6 +3,9 @@
     public class DomainPolicies
     {
         public const string Admin = "admin";
-        public const string Merchant = "merchant";
+        /// <summary>
+        /// Policy for normal users.
+        /// </summary>
+        public const string NormalUser = "normal_user";
     }
 }

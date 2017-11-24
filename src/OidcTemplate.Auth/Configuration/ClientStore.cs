@@ -73,13 +73,12 @@ namespace OpenSoftware.OidcTemplate.Auth.Configuration
                     IdentityServerConstants.StandardScopes.Email,
                     _domainSettings.Api.Id,
                     DomainScopes.Roles,
-                    DomainScopes.Merchant,
-                    DomainScopes.MerchantApiKeys
+                    DomainScopes.MvcClientUser,
+                    DomainScopes.ApiKeys
                 },
                 // Embedded in token
                 Claims = new List<Claim>
                 {
-                    new Claim(DomainClaimTypes.AnyMerchant, "true"),
                     new Claim(DomainClaimTypes.LiveEnabled, "true")
                 }
             };

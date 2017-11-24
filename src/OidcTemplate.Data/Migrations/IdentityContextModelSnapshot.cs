@@ -135,6 +135,8 @@ namespace OpenSoftware.OidcTemplate.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("ApiKey");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
