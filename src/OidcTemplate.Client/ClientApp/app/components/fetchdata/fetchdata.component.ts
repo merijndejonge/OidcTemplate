@@ -8,7 +8,7 @@ import {AuthenticatedHttpService} from "../../services/authenticated-http.servic
 export class FetchDataComponent {
     public forecasts: WeatherForecast[];
 
-    constructor(http: AuthenticatedHttpService, @Inject('BASE_URL') baseUrl: string) {
+    constructor(http: AuthenticatedHttpService) {
         http.get('api/SampleData/WeatherForecasts').subscribe(result => {
             this.forecasts = result.json() as WeatherForecast[];
         }, error => console.error(error));
