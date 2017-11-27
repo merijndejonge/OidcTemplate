@@ -68,7 +68,6 @@ You cna now access the application by navigating to http://localhost:5002 in you
 
 This will redirect you to the login page of your IdentityServer4 token server at http://localhost:5000. Here you first need to create an account. After crfeating an account you are redirected back to http://localhost:5002. If you then click on the `Fetch data` tab, a request is made to the SampleDataController WebApi that is running at http://localhost:5001. This service consumes the provided access token that you received when logging in. Only with this valid access token, the service will execute and provide you with weather forecast data.
 
-
 # Used resources
 * [IdentityServer4 documentation page](https://identityserver4.readthedocs.io/en/release/)
 * [Identity Server: Introduction](https://elanderson.net/2017/05/identity-server-introduction/)
@@ -76,13 +75,10 @@ This will redirect you to the login page of your IdentityServer4 token server at
 * [Identity Server 4 Solution Architecture](http://benjii.me/2017/10/identity-server-4-solution-architecture/)
 * [ASP.NET Core Authentication with IdentityServer4](https://blogs.msdn.microsoft.com/webdev/2017/01/23/asp-net-core-authentication-with-identityserver4/)
 * [[dotnet new] Angular Single Page Application – Setup and How The Template Works](https://dotnetcore.gaprogman.com/2017/04/20/dotnet-new-angular-single-page-application-setup-and-how-the-template-works/)
-
 * [Creating a Self-Signed Certificate for Identity Server and Azure](http://benjii.me/2017/06/creating-self-signed-certificate-identity-server-azure/)
 * [Enable Entity Framework Core Migrations in Visual Studio 2017](http://benjii.me/2017/05/enable-entity-framework-core-migrations-visual-studio-2017/)
 * [An in-depth look at the various ways of specifying the IP or host ASP.NET Core listens on](http://josephwoodward.co.uk/2017/02/many-different-ways-specifying-host-port-asp-net-core)
 * [.NET Core command-line interface (CLI) tools](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new?tabs=netcore2x)
-
-
 
 # More info
 * Source code of `OidcTemplate` is available at [GitHub](https://github.com/merijndejonge/OidcTemplate).
