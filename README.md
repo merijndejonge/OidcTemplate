@@ -46,8 +46,7 @@ Configuration is done in the `appsettings.json` file. Currently, this file is du
 As you can see, it defines the connection string for the database (`AuthContext`) as an application setting. The three services are configured in the `DomainSettings` section of the configuration file.
 
 
-# Build / run (from command line)
-
+# Build / run 
 Once you obtained the source code of `OidcTemplate` from github, you need to perform a few steps from the command line to install required dependencies.
 ```bat
 cd OidcTemplate
@@ -85,7 +84,7 @@ This will redirect you to the login page of your IdentityServer4 token server at
 
 
 
-## More info
+# More info
 * Source code of `OidcTemplate` is available at [GitHub](https://github.com/merijndejonge/OidcTemplate).
 * `OidcTemplate` is distributed under the [Apache 2.0 License](https://github.com/merijndejongeOidcTemplate/blob/master/LICENSE).
 # Acknoledgements
