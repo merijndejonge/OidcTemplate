@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenSoftware.OidcTemplate.Auth.Certificates;
 using OpenSoftware.OidcTemplate.Auth.Configuration;
 using OpenSoftware.OidcTemplate.Auth.Services;
 using OpenSoftware.OidcTemplate.Data;
@@ -87,9 +87,13 @@ namespace OpenSoftware.OidcTemplate.Auth
                     options.UserInteraction.LoginUrl = "/Account/login";
                     options.UserInteraction.LogoutUrl = "/Account/logout";
                 })
-                .AddDeveloperSigningCredential()
-                // Todo: fix error: Keyset does not exist exception
-                //                .AddSigningCredential(MakeCert())
+                // Replace with your certificate's thumbPrint, path, and password
+                .AddSigningCredential(
+                    CertificateLoader.Load(
+                        "701480955FFC6E5423A267A37F5968E28E4FF31B",
+                        Path.Combine(_env.ContentRootPath, @"Certificates\example.pfx"),
+                        "OidcTemplate",
+                        false))
                 .AddInMemoryApiResources(Domain.Authentication.Resources.GetApis(domainSettings.Api))
                 .AddInMemoryIdentityResources(Domain.Authentication.Resources.GetIdentityResources())
                 .AddOperationalStore(options =>
@@ -109,30 +113,6 @@ namespace OpenSoftware.OidcTemplate.Auth
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IClientStore, ClientStore>();
-        }
-
-        private X509Certificate2 MakeCert()
-        {
-            const string thumbPrint = "92D4E2F08AF56FAE9D8D5D97C3BEE85E0FA5E038";
-            X509Certificate2 cert = null;
-            using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-            {
-                certStore.Open(OpenFlags.ReadOnly);
-                var certCollection = certStore.Certificates.Find(
-                    X509FindType.FindByThumbprint, thumbPrint, false);
-                // Get the first cert with the thumprint
-                if (certCollection.Count > 0)
-                {
-                    // Successfully loaded cert from registry
-                    cert = certCollection[0];
-                }
-            }
-            // Fallback to local file for development
-            if (cert == null)
-            {
-                cert = new X509Certificate2(Path.Combine(Path.Combine(_env.ContentRootPath, "Certificates"), "auth.pfx"), "export");
-            }
-            return cert;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
