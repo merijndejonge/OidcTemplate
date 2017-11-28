@@ -20,6 +20,8 @@ export class AuthenticatedHttpService {
     public webUrl: string;
 
     constructor(private http: Http, private portalService: PortalService) {
+        if (!portalService.appSettings) return;
+
         console.log("Api url: " + portalService.appSettings.baseUrls.api);
         console.log("Auth url: " + portalService.appSettings.baseUrls.auth);
         console.log("Web url: " + portalService.appSettings.baseUrls.web);
