@@ -113,6 +113,7 @@ namespace OpenSoftware.OidcTemplate.Auth
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IClientStore, ClientStore>();
+            services.AddScoped<ISeedAuthService, SeedAuthService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -131,7 +132,7 @@ namespace OpenSoftware.OidcTemplate.Auth
                 {
                     serviceScope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
                     serviceScope.ServiceProvider.GetService<IdentityContext>().Database.Migrate();
-                    serviceScope.ServiceProvider.GetService<ISeedAuthService>().SeedAuthDatabase().Wait();
+                    serviceScope.ServiceProvider.GetService<ISeedAuthService>().SeedAuthDatabase(serviceScope.ServiceProvider).Wait();
                 }
             }
             catch (Exception e)
