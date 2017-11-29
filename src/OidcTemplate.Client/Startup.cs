@@ -15,9 +15,21 @@ namespace OpenSoftware.OidcTemplate.Client
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly int _sslPort = 443;
+
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             Configuration = configuration;
+            if (env.IsDevelopment())
+            {
+                var launchConfiguration = new ConfigurationBuilder()
+                    .SetBasePath(env.ContentRootPath)
+                    .AddJsonFile(@"Properties\launchSettings.json")
+                    .Build();
+                // During development we won't be using port 443
+                _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress:sslPort");
+            }
+
         }
 
         public IConfiguration Configuration { get; }
@@ -30,7 +42,7 @@ namespace OpenSoftware.OidcTemplate.Client
             section.Bind(domainSettings);
             services.Configure<DomainSettings>(options => section.Bind(options));
 
-            services.AddMvc();
+            services.AddMvc(options => options.SslPort = _sslPort);
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 

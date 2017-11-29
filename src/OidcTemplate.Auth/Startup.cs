@@ -22,20 +22,15 @@ namespace OpenSoftware.OidcTemplate.Auth
     public class Startup
     {
         private readonly IHostingEnvironment _env;
-        public IConfigurationRoot Configuration { get; set; }
+        public IConfiguration Configuration { get; set; }
         private readonly int _sslPort = 443;
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
+            Configuration = configuration;
             _env = env;
 
             TelemetryConfiguration.Active.DisableTelemetry = true;
 
-            // Set up configuration sources
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
             if (env.IsDevelopment())
             {
                 var launchConfiguration = new ConfigurationBuilder()
@@ -45,7 +40,6 @@ namespace OpenSoftware.OidcTemplate.Auth
                 // During development we won't be using port 443
                 _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress:sslPort");
             }
-            Configuration = builder.Build();
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940

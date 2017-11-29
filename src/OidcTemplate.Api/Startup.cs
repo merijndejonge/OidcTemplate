@@ -13,15 +13,9 @@ namespace OpenSoftware.OidcTemplate.Api
     {
         private readonly int _sslPort =  443;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             TelemetryConfiguration.Active.DisableTelemetry = true;
-
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appSettings.json")
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
             {
@@ -29,12 +23,11 @@ namespace OpenSoftware.OidcTemplate.Api
                     .SetBasePath(env.ContentRootPath)
                     .AddJsonFile(@"Properties\launchSettings.json")
                     .Build();
-                // Durign development we won't be using port 441
+                // During development we won't be using port 443
                 _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress::sslPort");
-                builder.AddApplicationInsightsSettings(developerMode: true);
             }
 
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
