@@ -16,6 +16,7 @@ namespace OpenSoftware.OidcTemplate.Client.ViewComponents
         {
             _domainSettings = appSettings.Value;
         }
+
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var token = await HttpContext.GetTokenAsync("access_token");
@@ -28,9 +29,8 @@ namespace OpenSoftware.OidcTemplate.Client.ViewComponents
                 AccessToken = token,
                 UserFullName = HttpContext.User.FindFirstValue(JwtClaimTypes.Name),
                 UserEmail = HttpContext.User.FindFirstValue(JwtClaimTypes.Email)
-            // ...
-        };
-
+                // ...
+            };
 
             return View(settings);
         }

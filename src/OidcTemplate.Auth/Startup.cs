@@ -130,11 +130,6 @@ namespace OpenSoftware.OidcTemplate.Auth
 
 
             app.UseMvcWithDefaultRoute();
-
-            //app.Run(async (context) =>
-            //{
-            //    await context.Response.WriteAsync("Hello World!");
-            //});
         }
     }
 }
