@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenSoftware.OidcTemplate.Domain.Authentication;
 
-namespace OpenSoftware.OidcTemplate.Auth
+namespace OpenSoftware.OidcTemplate.Auth.DatabaseSeed
 {
     public class SeedAuthService : ISeedAuthService
     {

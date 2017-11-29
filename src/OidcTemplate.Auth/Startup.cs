@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
-using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -13,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenSoftware.OidcTemplate.Auth.Certificates;
 using OpenSoftware.OidcTemplate.Auth.Configuration;
+using OpenSoftware.OidcTemplate.Auth.DatabaseSeed;
 using OpenSoftware.OidcTemplate.Auth.Services;
 using OpenSoftware.OidcTemplate.Data;
 using OpenSoftware.OidcTemplate.Domain.Configuration;
@@ -123,24 +122,6 @@ namespace OpenSoftware.OidcTemplate.Auth
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            // Migrate and seed the database during startup. Must be synchronous
-            try
-            {
-                using (var serviceScope =
-                    app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                {
-                    serviceScope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
-                    serviceScope.ServiceProvider.GetService<IdentityContext>().Database.Migrate();
-                    serviceScope.ServiceProvider.GetService<ISeedAuthService>().SeedAuthDatabase(serviceScope.ServiceProvider).Wait();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                //                Log.Error(ex, "Failed to migrate or seed database");
-            }
-
 
             app.UseAuthentication();
             app.UseIdentityServer();

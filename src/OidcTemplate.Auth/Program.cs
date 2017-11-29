@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenSoftware.OidcTemplate.Auth.DatabaseSeed;
 using Serilog;
 using Serilog.Events;
 
@@ -23,7 +24,9 @@ namespace OpenSoftware.OidcTemplate.Auth
                 )
                 .CreateLogger();
 
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+            host.SeedDatabase();
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

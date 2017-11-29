@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
-namespace OpenSoftware.OidcTemplate.Auth
+namespace OpenSoftware.OidcTemplate.Auth.DatabaseSeed
 {
     public interface ISeedAuthService
     {
