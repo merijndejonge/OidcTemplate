@@ -58,6 +58,10 @@ namespace OpenSoftware.OidcTemplate.Client.Controllers
                 access_token = newAccessToken
             });
         }
-        
+        public async Task LogOff()
+        {
+            await HttpContext.SignOutAsync("Cookies");
+            await HttpContext.SignOutAsync("oidc");
+        }
     }
 }
