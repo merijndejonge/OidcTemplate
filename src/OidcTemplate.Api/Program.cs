@@ -11,8 +11,7 @@ namespace OpenSoftware.OidcTemplate.Api
     {
         public static void Main(string[] args)
         {
-
-            Console.Title = "IdentityServer4";
+            Console.Title = "OidcTemplate.Api";
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
@@ -24,7 +23,7 @@ namespace OpenSoftware.OidcTemplate.Api
                 .WriteTo.Console(
                     outputTemplate:
                     "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}"
-                    )
+                )
                 .CreateLogger();
 
             BuildWebHost(args).Run();
@@ -33,7 +32,7 @@ namespace OpenSoftware.OidcTemplate.Api
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-            .UseUrls("http://localhost:5001")
+                .UseUrls("http://localhost:5001")
                 .ConfigureLogging(builder =>
                 {
                     builder.ClearProviders();

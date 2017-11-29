@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenSoftware.OidcTemplate.Auth.DatabaseSeed;
@@ -11,6 +12,8 @@ namespace OpenSoftware.OidcTemplate.Auth
     {
         public static void Main(string[] args)
         {
+            Console.Title = "OidcTemplate.Auth";
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -32,7 +35,7 @@ namespace OpenSoftware.OidcTemplate.Auth
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-            .UseUrls("http://localhost:5000")
+                .UseUrls("http://localhost:5000")
                 .ConfigureLogging(builder =>
                 {
                     builder.ClearProviders();
