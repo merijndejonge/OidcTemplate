@@ -5,7 +5,8 @@ declare var oidcTemplateAppSettings: any;
 
 @Injectable()
 export class PortalService {
-    private pAppSettings : IAppSettings;
+    private pAppSettings: IAppSettings;
+
     get appSettings(): IAppSettings {
         if (!this.pAppSettings) {
             this.pAppSettings = this.loadSettings();
