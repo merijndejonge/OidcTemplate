@@ -1,3 +1,7 @@
+// Fix Angular2 IE11 Unable to get property 'apply' of undefined or null reference
+// https://stackoverflow.com/questions/41276692/angular2-ie11-unable-to-get-property-apply-of-undefined-or-null-reference
+import "core-js/client/shim"; // or load it before other angular2 & zone.js stuff
+
 import 'reflect-metadata';
 import 'zone.js';
 import 'bootstrap';
