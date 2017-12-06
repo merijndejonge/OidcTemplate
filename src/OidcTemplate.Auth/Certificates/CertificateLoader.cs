@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace OpenSoftware.OidcTemplate.Auth.Certificates
 {
@@ -12,23 +13,33 @@ namespace OpenSoftware.OidcTemplate.Auth.Certificates
         /// <param name="password">Password of certificate</param>
         /// <param name="isTrusted">True when certificate is trusted, fale otherwise</param>
         /// <returns></returns>
-        public static X509Certificate2 Load(string thumbPrint, string pathToCertificate, string password, bool isTrusted)
+        public static X509Certificate2 Load(string thumbPrint, string pathToCertificate, string password,
+            bool isTrusted)
         {
-            X509Certificate2 cert = null;
+            return TryLoadCertFromStore(thumbPrint, isTrusted) ?? TryLoadCertFromFile(pathToCertificate, password);
+        }
+
+        private static X509Certificate2 TryLoadCertFromStore(string thumbPrint, bool isTrusted)
+        {
             using (var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
             {
                 certStore.Open(OpenFlags.ReadOnly);
-                var certCollection = certStore.Certificates.Find(
-                    X509FindType.FindByThumbprint, thumbPrint, isTrusted);
-                // Get the first cert with the thumprint
-                if (certCollection.Count > 0)
-                {
-                    // Successfully loaded cert from registry
-                    cert = certCollection[0];
-                }
+                var certCollection = certStore.Certificates.Find(X509FindType.FindByThumbprint, thumbPrint, isTrusted);
+                // Get the first cert with the thumprint or null
+                return certCollection.Count > 0 ? certCollection[0] : null;
             }
-            // Fallback to local file for development
-            return cert ?? new X509Certificate2(pathToCertificate, password);
+        }
+        private static X509Certificate2 TryLoadCertFromFile(string pathToCertificate, string password)
+        {
+            if (File.Exists(pathToCertificate) == false)
+            {
+                throw new FileNotFoundException(pathToCertificate);
+            }
+
+            var certCollection = new X509Certificate2Collection();
+            certCollection.Import(pathToCertificate, password, X509KeyStorageFlags.PersistKeySet);
+            // Get the first cert from the collection or null
+            return certCollection.Count > 0 ? certCollection[0] : null;
         }
     }
 }
