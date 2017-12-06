@@ -77,6 +77,7 @@ This will redirect you to the login page of your IdentityServer4 token server at
 * [Identity Server 4 Solution Architecture](http://benjii.me/2017/10/identity-server-4-solution-architecture/)
 * [ASP.NET Core Authentication with IdentityServer4](https://blogs.msdn.microsoft.com/webdev/2017/01/23/asp-net-core-authentication-with-identityserver4/)
 * [[dotnet new] Angular Single Page Application – Setup and How The Template Works](https://dotnetcore.gaprogman.com/2017/04/20/dotnet-new-angular-single-page-application-setup-and-how-the-template-works/)
+* [Building web apps powered by Angular 2.x using Visual Studio 2017](https://channel9.msdn.com/Events/Visual-Studio/Visual-Studio-2017-Launch/WEB-103)
 * [Creating a Self-Signed Certificate for Identity Server and Azure](http://benjii.me/2017/06/creating-self-signed-certificate-identity-server-azure/)
 * [Enable Entity Framework Core Migrations in Visual Studio 2017](http://benjii.me/2017/05/enable-entity-framework-core-migrations-visual-studio-2017/)
 * [An in-depth look at the various ways of specifying the IP or host ASP.NET Core listens on](http://josephwoodward.co.uk/2017/02/many-different-ways-specifying-host-port-asp-net-core)
