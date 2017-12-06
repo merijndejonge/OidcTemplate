@@ -45,7 +45,9 @@ Configuration is done in the `appsettings.json` file. Currently, this file is du
 ```
 As you can see, it defines the connection string for the database (`AuthContext`) as an application setting. The three services are configured in the `DomainSettings` section of the configuration file.
 
-
+# Prerequisites
+* Visual Studio 2017
+* Node.js (https://nodejs.org/en/)
 # Build / run 
 Once you obtained the source code of `OidcTemplate` from github, you need to perform a few steps from the command line to install required dependencies.
 ```bat
@@ -64,7 +66,7 @@ cd src\OidcTemplate.Auth && dotnet run
 cd src\OidcTemplate.Api && dotnet run
 cd src\OidcTemplate.Client && dotnet run
 ```
-You cna now access the application by navigating to http://localhost:5002 in your web browser.
+You can now access the application by navigating to http://localhost:5002 in your web browser.
 
 This will redirect you to the login page of your IdentityServer4 token server at http://localhost:5000. Here you first need to create an account. After crfeating an account you are redirected back to http://localhost:5002. If you then click on the `Fetch data` tab, a request is made to the SampleDataController WebApi that is running at http://localhost:5001. This service consumes the provided access token that you received when logging in. Only with this valid access token, the service will execute and provide you with weather forecast data.
 
