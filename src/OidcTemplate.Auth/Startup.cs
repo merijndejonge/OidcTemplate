@@ -35,7 +35,7 @@ namespace OpenSoftware.OidcTemplate.Auth
             {
                 var launchConfiguration = new ConfigurationBuilder()
                     .SetBasePath(env.ContentRootPath)
-                    .AddJsonFile(@"Properties\launchSettings.json")
+                    .AddJsonFile(Path.Combine("Properties", "launchSettings.json"))
                     .Build();
                 // During development we won't be using port 443
                 _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress:sslPort");
@@ -84,7 +84,7 @@ namespace OpenSoftware.OidcTemplate.Auth
                 .AddSigningCredential(
                     CertificateLoader.Load(
                         "701480955FFC6E5423A267A37F5968E28E4FF31B",
-                        Path.Combine(_env.ContentRootPath, @"Certificates\example.pfx"),
+                        Path.Combine(_env.ContentRootPath, "Certificates", "example.pfx"),
                         "OidcTemplate",
                         false))
                 .AddInMemoryApiResources(Domain.Authentication.Resources.GetApis(domainSettings.Api))

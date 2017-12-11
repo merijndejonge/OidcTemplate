@@ -1,4 +1,5 @@
-﻿using IdentityModel;
+﻿using System.IO;
+using IdentityModel;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,7 +22,7 @@ namespace OpenSoftware.OidcTemplate.Api
             {
                 var launchConfiguration = new ConfigurationBuilder()
                     .SetBasePath(env.ContentRootPath)
-                    .AddJsonFile(@"Properties\launchSettings.json")
+                    .AddJsonFile(Path.Combine("Properties", "launchSettings.json"))
                     .Build();
                 // During development we won't be using port 443
                 _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress::sslPort");

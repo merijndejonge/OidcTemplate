@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Threading.Tasks;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -24,7 +25,7 @@ namespace OpenSoftware.OidcTemplate.Client
             {
                 var launchConfiguration = new ConfigurationBuilder()
                     .SetBasePath(env.ContentRootPath)
-                    .AddJsonFile(@"Properties\launchSettings.json")
+                    .AddJsonFile(Path.Combine("Properties", "launchSettings.json"))
                     .Build();
                 // During development we won't be using port 443
                 _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress:sslPort");
