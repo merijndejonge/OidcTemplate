@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/throw';
 
 import {PortalService} from './portal.service';
 
@@ -59,7 +60,19 @@ export class AuthenticatedHttpService {
         const request = () => {
             const headers = this.createHeaders();
             headers.append("Content-Type", "application/json");
-            return this.http.post(this.apiUrl + this.getApiPrefix() + url,
+            return this.http.post(this.apiUrl + "/" + this.getApiPrefix() + url,
+                data,
+                {
+                    headers: headers
+                });
+        };
+        return this.refreshTokenOnAuthorizationFailure(request);
+    }
+    post1(url: string, data: any) {
+        const request = () => {
+            const headers = this.createHeaders();
+//            headers.append("Content-Type", "application/json");
+            return this.http.post(this.webUrl + "/" + this.getApiPrefix() + url,
                 data,
                 {
                     headers: headers
