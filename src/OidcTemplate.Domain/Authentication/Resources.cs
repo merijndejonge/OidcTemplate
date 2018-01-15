@@ -43,6 +43,7 @@ namespace OpenSoftware.OidcTemplate.Domain.Authentication
                     ApiSecrets = new List<Secret> {new Secret(api.Secret.Sha256())},
                     UserClaims = new List<string>
                     {
+                        DomainClaimTypes.Role,
                         DomainClaimTypes.TestUserId,
                         DomainClaimTypes.LiveUserId,
                         DomainClaimTypes.LiveEnabled,
@@ -51,7 +52,6 @@ namespace OpenSoftware.OidcTemplate.Domain.Authentication
                     Scopes = new List<Scope>
                     {
                         new Scope(api.Id), // Should match name of ApiResource.Name
-                        new Scope(DomainScopes.Roles, new List<string>{DomainClaimTypes.Role}),
                         new Scope
                         {
                             Name = DomainScopes.ApiKeys,
