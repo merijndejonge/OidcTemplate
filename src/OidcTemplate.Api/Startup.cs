@@ -1,10 +1,13 @@
 ﻿using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
 using IdentityModel;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSwag.AspNetCore;
 using OpenSoftware.OidcTemplate.Domain.Authentication;
 using OpenSoftware.OidcTemplate.Domain.Configuration;
 
@@ -91,6 +94,9 @@ namespace OpenSoftware.OidcTemplate.Api
 
             app.UseCors("default");
             app.UseAuthentication();
+
+            app.UseSwaggerUi(typeof(Startup).Assembly, new SwaggerUiSettings());
+
             app.UseMvc();
         }
     }

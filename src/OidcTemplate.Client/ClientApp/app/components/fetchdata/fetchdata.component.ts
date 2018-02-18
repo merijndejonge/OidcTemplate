@@ -1,24 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthenticatedHttpService} from "../../services/authenticated-http.service";
+import { AuthenticatedHttpService } from "../../services/authenticated-http.service";
+import { SampleDataClient, WeatherForecast, SwaggerException } from '../../generated/servermodel';
+import { Subscription } from 'rxjs/Subscription';
+
 @Component({
     selector: 'fetchdata',
     templateUrl: './fetchdata.component.html'
 })
-export class FetchDataComponent implements OnInit{
-    public forecasts: WeatherForecast[];
-
-    constructor(private http: AuthenticatedHttpService) {
+export class FetchDataComponent implements OnInit {
+    private forecasts: WeatherForecast[];
+    
+    constructor(private http: AuthenticatedHttpService, private sampleDataClient: SampleDataClient) {
     }
+
     ngOnInit(): void {
-        this.http.get('api/SampleData/WeatherForecasts').subscribe(result => {
-            this.forecasts = result.json() as WeatherForecast[];
-        }, error => console.error(error));
+        this.sampleDataClient
+            .weatherForecasts()
+            .subscribe((result: WeatherForecast[]) => {
+                this.forecasts = result;
+            }, (error: SwaggerException) => console.error(error));
     }
-}
-
-interface WeatherForecast {
-    dateFormatted: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
 }
