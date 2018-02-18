@@ -34,13 +34,4 @@
     <ProjectReference Include="..\OidcTemplate.Domain\OidcTemplate.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="debug.nswag">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="debug.nswag">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

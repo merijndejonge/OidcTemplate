@@ -19,7 +19,8 @@
       "output": "",
       "assemblyPaths": [
         "bin/Debug/netcoreapp2.0/OpenSoftware.OidcTemplate.Api.dll"
-      ]
+      ],
+      "referencePaths": []
     }
   },
   "codeGenerators": {
@@ -27,10 +28,10 @@
       "className": "{controller}Client",
       "moduleName": "",
       "namespace": "",
-      "typeScriptVersion": 2.7,
+      "typeScriptVersion": 2.0,
       "template": "Angular",
       "promiseType": "Promise",
-      "httpClass": "HttpClient",
+      "httpClass": "Http",
       "injectionTokenType": "InjectionToken",
       "dateTimeType": "Date",
       "nullValue": "Undefined",
@@ -38,16 +39,20 @@
       "generateClientInterfaces": false,
       "generateOptionalParameters": false,
       "wrapDtoExceptions": true,
+      "clientBaseClass": "ClientBase",
       "wrapResponses": false,
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "useTransformOptionsMethod": false,
-      "useTransformResultMethod": false,
+      "configurationClass": "Injector",
+      "useTransformOptionsMethod": true,
+      "useTransformResultMethod": true,
       "generateDtoTypes": true,
       "operationGenerationMode": "MultipleClientsFromOperationId",
       "markOptionalProperties": true,
       "generateCloneMethod": true,
       "typeStyle": "Class",
+      "extendedClasses": [],
+      "extensionCode": "../OidcTemplate.Client/ClientApp/app/services/generated.extensions.ts",
       "generateDefaultValues": true,
       "excludedTypeNames": [],
       "handleReferences": false,
@@ -57,7 +62,7 @@
       "useGetBaseUrlMethod": false,
       "baseUrlTokenName": "API_BASE_URL",
       "queryNullValue": "",
-      "output": "../OidcTemplate.Client/ClientApp/app/generated/servermodel.ts"
+      "output": "../OidcTemplate.Client/ClientApp/app/services/generated.ts"
     }
   }
 }

@@ -6,6 +6,8 @@
 //----------------------
 // ReSharper disable InconsistentNaming
 
+import { Injector } from "@angular/core";
+import { PortalService } from "./portal.service";
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
@@ -16,77 +18,58 @@ import 'rxjs/add/operator/catch';
 
 import { Observable } from 'rxjs/Observable';
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpResponseBase, HttpErrorResponse } from '@angular/common/http';
+import { Http, Headers, ResponseContentType, Response, RequestOptionsArgs } from '@angular/http';
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
-@Injectable()
-export class AnotherClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+export class ClientBase {
+    private portalService: PortalService;
+    private baseHttp: Http;
 
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
+    constructor(private injector: Injector) {
+        this.portalService = injector.get(PortalService);
+        this.baseHttp = injector.get(Http);
     }
 
-    testNswag(easy: WouldLikeThisOnTheClient): Observable<void> {
-        let url_ = this.baseUrl + "/api/Another/TestNswag";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(easy);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json", 
-            })
-        };
-
-        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
-            return this.processTestNswag(response_);
-        }).catch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processTestNswag(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>Observable.throw(e);
-                }
-            } else
-                return <Observable<void>><any>Observable.throw(response_);
-        });
+    protected transformOptions(options: any) {
+        options.headers.append("Authorization", "Bearer " + this.portalService.appSettings.accessToken);
+        return Promise.resolve(options);
     }
 
-    protected processTestNswag(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob = 
-            response instanceof HttpResponse ? response.body : 
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 200) {
-            return blobToText(responseBlob).flatMap(_responseText => {
-            return Observable.of<void>(<any>null);
-            });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).flatMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+    protected transformResult(url: string, response: Response, processor: (response: Response) => any): Observable<any> {
+        
+        if (response.status === 401) {
+            return this.refreshTokens()
+                .flatMap((newTokenResponse: ITokenRefresh) => {
+                    if (!newTokenResponse || !newTokenResponse.access_token) {
+                        // Something's up with the token refresg. Only solution from here is to re-login
+                        // Redirect to logout
+                        window.location.href = this.portalService.appSettings.baseUrls.web + "/account/logoff";
+                        return Observable.throw("Could not refresh authentication token. Redirecting to logout.");
+                    }
+                    this.portalService.appSettings.accessToken = newTokenResponse.access_token;
+                    return processor(response);
+                });
+        } else {
+            return processor(response);
         }
-        return Observable.of<void>(<any>null);
+    }
+    
+    refreshTokens() {
+        console.log("Refreshed access token");
+        return this.baseHttp.get(this.portalService.appSettings.baseUrls.web + "/Account/RefreshTokens")
+            .map((r) => <ITokenRefresh>r.json());
     }
 }
 
 @Injectable()
-export class SampleDataClient {
-    private http: HttpClient;
+export class SampleDataClient extends ClientBase {
+    private http: Http;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(Injector) configuration: Injector, @Inject(Http) http: Http, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        super(configuration);
         this.http = http;
         this.baseUrl = baseUrl ? baseUrl : "";
     }
@@ -96,20 +79,21 @@ export class SampleDataClient {
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
+            method: "get",
+            headers: new Headers({
                 "Content-Type": "application/json", 
                 "Accept": "application/json"
             })
         };
 
-        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
-            return this.processWeatherForecasts(response_);
+        return Observable.fromPromise(this.transformOptions(options_)).flatMap(transformedOptions_ => {
+            return this.http.request(url_, transformedOptions_);
+        }).flatMap((response_: any) => {
+            return this.transformResult(url_, response_, (r) => this.processWeatherForecasts(<any>r));
         }).catch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
+            if (response_ instanceof Response) {
                 try {
-                    return this.processWeatherForecasts(<any>response_);
+                    return this.transformResult(url_, response_, (r) => this.processWeatherForecasts(<any>r));
                 } catch (e) {
                     return <Observable<WeatherForecast[]>><any>Observable.throw(e);
                 }
@@ -118,15 +102,12 @@ export class SampleDataClient {
         });
     }
 
-    protected processWeatherForecasts(response: HttpResponseBase): Observable<WeatherForecast[]> {
+    protected processWeatherForecasts(response: Response): Observable<WeatherForecast[]> {
         const status = response.status;
-        const responseBlob = 
-            response instanceof HttpResponse ? response.body : 
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        let _headers: any = response.headers ? response.headers.toJSON() : {};
         if (status === 200) {
-            return blobToText(responseBlob).flatMap(_responseText => {
+            const _responseText = response.text();
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             if (resultData200 && resultData200.constructor === Array) {
@@ -135,54 +116,19 @@ export class SampleDataClient {
                     result200.push(WeatherForecast.fromJS(item));
             }
             return Observable.of(result200);
-            });
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).flatMap(_responseText => {
+            const _responseText = response.text();
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
         }
         return Observable.of<WeatherForecast[]>(<any>null);
     }
 }
 
-export class WouldLikeThisOnTheClient {
-    test!: string;
-    another!: string;
-
-    init(data?: any) {
-        if (data) {
-            this.test = data["test"];
-            this.another = data["another"];
-        }
-    }
-
-    static fromJS(data: any): WouldLikeThisOnTheClient {
-        data = typeof data === 'object' ? data : {};
-        let result = new WouldLikeThisOnTheClient();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["test"] = this.test;
-        data["another"] = this.another;
-        return data; 
-    }
-
-    clone() {
-        const json = this.toJSON();
-        let result = new WouldLikeThisOnTheClient();
-        result.init(json);
-        return result;
-    }
-}
-
 export class WeatherForecast {
-    dateFormatted!: string;
-    temperatureC!: number;
-    summary!: string;
-    temperatureF!: number;
+    dateFormatted: string;
+    temperatureC: number;
+    summary: string;
+    temperatureF: number;
 
     init(data?: any) {
         if (data) {
@@ -259,4 +205,8 @@ function blobToText(blob: any): Observable<string> {
             reader.readAsText(blob); 
         }
     });
+}
+
+export interface ITokenRefresh {
+    access_token: string;
 }
