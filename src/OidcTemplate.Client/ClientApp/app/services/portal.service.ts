@@ -1,5 +1,4 @@
 ﻿import {Injectable} from '@angular/core';
-import {IAppSettings} from "./IAppSettings";
 
 declare var oidcTemplateAppSettings: any;
 
@@ -31,4 +30,17 @@ export class PortalService {
             return undefined as any;
         }
     }
+}
+
+export interface IAppSettings {
+    baseUrls: IBaseUrls;
+    accessToken: string;
+    userFullName: string;
+    userEmail: string;
+}
+
+export interface IBaseUrls {
+    api: string;
+    auth: string;
+    web: string;
 }

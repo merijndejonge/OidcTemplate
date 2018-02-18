@@ -1,0 +1,68 @@
+﻿{
+  "runtime": "NetCore20",
+  "swaggerGenerator": {
+    "webApiToSwagger": {
+      "controllerNames": [],
+      "isAspNetCore": true,
+      "defaultUrlTemplate": "api/{controller}/{id?}",
+      "defaultPropertyNameHandling": "CamelCase",
+      "defaultReferenceTypeNullHandling": "NotNull",
+      "defaultEnumHandling": "String",
+      "flattenInheritanceHierarchy": false,
+      "generateKnownTypes": true,
+      "generateXmlObjects": false,
+      "generateAbstractProperties": false,
+      "addMissingPathParameters": false,
+      "ignoreObsoleteProperties": false,
+      "allowReferencesWithProperties": false,
+      "excludedTypeNames": [],
+      "output": "",
+      "assemblyPaths": [
+        "bin/Debug/netcoreapp2.0/OpenSoftware.OidcTemplate.Api.dll"
+      ],
+      "referencePaths": []
+    }
+  },
+  "codeGenerators": {
+    "swaggerToTypeScriptClient": {
+      "className": "{controller}Client",
+      "moduleName": "",
+      "namespace": "",
+      "typeScriptVersion": 2.0,
+      "template": "Angular",
+      "promiseType": "Promise",
+      "httpClass": "Http",
+      "injectionTokenType": "InjectionToken",
+      "dateTimeType": "Date",
+      "nullValue": "Undefined",
+      "generateClientClasses": true,
+      "generateClientInterfaces": false,
+      "generateOptionalParameters": false,
+      "wrapDtoExceptions": true,
+      "clientBaseClass": "ClientBase",
+      "wrapResponses": false,
+      "generateResponseClasses": true,
+      "responseClass": "SwaggerResponse",
+      "configurationClass": "Injector",
+      "useTransformOptionsMethod": true,
+      "useTransformResultMethod": true,
+      "generateDtoTypes": true,
+      "operationGenerationMode": "MultipleClientsFromOperationId",
+      "markOptionalProperties": true,
+      "generateCloneMethod": true,
+      "typeStyle": "Class",
+      "extendedClasses": [],
+      "extensionCode": "../OidcTemplate.Client/ClientApp/app/services/generated.extensions.ts",
+      "generateDefaultValues": true,
+      "excludedTypeNames": [],
+      "handleReferences": false,
+      "generateConstructorInterface": false,
+      "convertConstructorInterfaceData": false,
+      "importRequiredTypes": true,
+      "useGetBaseUrlMethod": false,
+      "baseUrlTokenName": "API_BASE_URL",
+      "queryNullValue": "",
+      "output": "../OidcTemplate.Client/ClientApp/app/services/generated.ts"
+    }
+  }
+}

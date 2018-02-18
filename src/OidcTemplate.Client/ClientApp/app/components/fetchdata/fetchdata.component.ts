@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthenticatedHttpService} from "../../services/authenticated-http.service";
+import { SampleDataClient, WeatherForecast, SwaggerException } from '../../services/generated';
+
 @Component({
     selector: 'fetchdata',
     templateUrl: './fetchdata.component.html'
@@ -7,18 +8,13 @@ import {AuthenticatedHttpService} from "../../services/authenticated-http.servic
 export class FetchDataComponent implements OnInit{
     public forecasts: WeatherForecast[];
 
-    constructor(private http: AuthenticatedHttpService) {
+    constructor(private sampleDataClient: SampleDataClient) {
     }
-    ngOnInit(): void {
-        this.http.get('api/SampleData/WeatherForecasts').subscribe(result => {
-            this.forecasts = result.json() as WeatherForecast[];
-        }, error => console.error(error));
-    }
-}
 
-interface WeatherForecast {
-    dateFormatted: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
+    ngOnInit(): void {
+        this.sampleDataClient.weatherForecasts().subscribe(result => {
+            console.log(result)
+            this.forecasts = result;
+        }, (error: SwaggerException)=> console.error(error));
+    }
 }

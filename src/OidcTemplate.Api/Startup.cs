@@ -1,10 +1,16 @@
 ﻿using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
 using IdentityModel;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NJsonSchema;
+using NSwag;
+using NSwag.AspNetCore;
+using NSwag.SwaggerGeneration.Processors.Security;
 using OpenSoftware.OidcTemplate.Domain.Authentication;
 using OpenSoftware.OidcTemplate.Domain.Configuration;
 
@@ -12,7 +18,7 @@ namespace OpenSoftware.OidcTemplate.Api
 {
     public class Startup
     {
-        private readonly int _sslPort =  443;
+        private readonly int _sslPort = 443;
 
         public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
@@ -45,11 +51,11 @@ namespace OpenSoftware.OidcTemplate.Api
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvcCore(options =>
-                {
-                    // options.Conventions.Insert(0, new ModeRouteConvention());
-                    //                options.Filters.Add(new RequireHttpsAttribute());
-                    options.SslPort = _sslPort;
-                })
+            {
+                // options.Conventions.Insert(0, new ModeRouteConvention());
+                //                options.Filters.Add(new RequireHttpsAttribute());
+                options.SslPort = _sslPort;
+            })
                 .AddAuthorization()
                 .AddJsonFormatters();
 
@@ -91,6 +97,9 @@ namespace OpenSoftware.OidcTemplate.Api
 
             app.UseCors("default");
             app.UseAuthentication();
+
+            app.UseSwaggerUi(typeof(Startup).Assembly, new SwaggerUiSettings());
+
             app.UseMvc();
         }
     }

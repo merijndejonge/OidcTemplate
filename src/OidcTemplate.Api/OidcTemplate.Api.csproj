@@ -6,6 +6,12 @@
     <RootNamespace>OpenSoftware.OidcTemplate.Api</RootNamespace>
   </PropertyGroup>
 
+  <Target Name="NSwag" AfterTargets="Build">
+    <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
+    <Exec Command="$(NSwagExe_Core20) run debug.nswag" />
+    <RemoveDir Directories="$(OutDir)References" />
+  </Target>
+
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
@@ -13,6 +19,8 @@
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="NSwag.AspNetCore" Version="11.15.3" />
+    <PackageReference Include="NSwag.MSBuild" Version="11.15.3" />
     <PackageReference Include="Serilog" Version="2.6.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />

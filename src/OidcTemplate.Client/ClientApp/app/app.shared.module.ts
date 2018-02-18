@@ -9,9 +9,9 @@ import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
+import { PortalService } from './services/portal.service';
+import { SampleDataClient, API_BASE_URL } from './services/generated';
 
-import { PortalService } from "./services/portal.service";
-import {AuthenticatedHttpService} from "./services/authenticated-http.service";
 
 @NgModule({
     declarations: [
@@ -34,8 +34,9 @@ import {AuthenticatedHttpService} from "./services/authenticated-http.service";
         ])
     ],
     providers: [
-        AuthenticatedHttpService,
-        PortalService
+        PortalService,
+        SampleDataClient,
+        { provide: API_BASE_URL, useValue: new PortalService().appSettings.baseUrls.api }
     ]
 })
 export class AppModuleShared {
