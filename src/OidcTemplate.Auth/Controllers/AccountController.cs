@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenSoftware.OidcTemplate.Auth.Data;
+using OpenSoftware.OidcTemplate.Domain.Entities;
 
 namespace OpenSoftware.OidcTemplate.Auth.Controllers
 {

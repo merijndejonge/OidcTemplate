@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using OpenSoftware.OidcTemplate.Auth.Data;
+using OpenSoftware.OidcTemplate.Domain.Entities;
 
 namespace OpenSoftware.OidcTemplate.Auth.Pages.Account
 {
@@ -78,7 +78,7 @@ namespace OpenSoftware.OidcTemplate.Auth.Pages.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input.RememberMe });
                 }
                 if (result.IsLockedOut)
                 {
