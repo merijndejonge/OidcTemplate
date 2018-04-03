@@ -1,27 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>aspnet-OpenSoftware.OidcTemplate.Auth-3419891B-0650-417C-A960-B492484DC1C1</UserSecretsId>
     <AssemblyName>OpenSoftware.OidcTemplate.Auth</AssemblyName>
     <RootNamespace>OpenSoftware.OidcTemplate.Auth</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <None Update="app.db" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="IdentityServer4" Version="2.1.1" />
-    <PackageReference Include="IdentityServer4.EntityFramework" Version="2.1.1" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" PrivateAssets="All" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
-
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.2" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.1" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OidcTemplate.Data\OidcTemplate.Data.csproj" />
     <ProjectReference Include="..\OidcTemplate.Domain\OidcTemplate.Domain.csproj" />
   </ItemGroup>
-
 </Project>

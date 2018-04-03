@@ -1,11 +1,11 @@
-﻿using System.IO;
+using System.IO;
 using System.Reflection;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,9 +22,9 @@ namespace OpenSoftware.OidcTemplate.Auth
     public class Startup
     {
         private readonly IHostingEnvironment _env;
-        public IConfiguration Configuration { get; set; }
         private readonly int _sslPort = 443;
-        public Startup(IHostingEnvironment env, IConfiguration configuration)
+
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
             _env = env;
@@ -41,8 +41,10 @@ namespace OpenSoftware.OidcTemplate.Auth
                 _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress:sslPort");
             }
         }
+
+        public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             var domainSettings = new DomainSettings();
@@ -57,7 +59,7 @@ namespace OpenSoftware.OidcTemplate.Auth
 
             services.AddDbContext<IdentityContext>(o => o.UseSqlServer(connectionString,
                 optionsBuilder =>
-                    optionsBuilder.MigrationsAssembly(typeof(DataModule).GetTypeInfo().Assembly.GetName().Name)));
+                    optionsBuilder.MigrationsAssembly(migrationsAssembly)));
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -102,8 +104,22 @@ namespace OpenSoftware.OidcTemplate.Auth
                 ;
 
 
-            // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
+
+
+            services.AddMvc(options =>
+                {
+                    //options.Filters.Add(new RequireHttpsAttribute());
+                    options.SslPort = _sslPort;
+                })
+                .AddRazorPagesOptions(options =>
+                {
+                    options.Conventions.AuthorizeFolder("/Account/Manage");
+                    options.Conventions.AuthorizePage("/Account/Logout");
+                });
+
+            // Register no-op EmailSender used by account confirmation and password reset during development
+            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
+            services.AddSingleton<IEmailSender, EmailSender>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IClientStore, ClientStore>();
             services.AddScoped<ISeedAuthService, SeedAuthService>();
@@ -115,15 +131,17 @@ namespace OpenSoftware.OidcTemplate.Auth
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
             }
 
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseIdentityServer();
-
-            app.UseStaticFiles();
-
-
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc();
         }
     }
 }
