@@ -2,9 +2,44 @@
 @model SignedOutModel
 @{
     ViewData["Title"] = "Signed out";
+    // set this so the layout rendering sees an anonymous user
+    ViewData["signed-out"] = true;
 }
 
-<h2>@ViewData["Title"]</h2>
-<p>
-    You have successfully signed out.
-</p>
+<script>
+    function redirect_page() {
+        @if (Model.AutomaticRedirectAfterSignOut && Model.PostLogoutRedirectUri != null)
+        {
+            <text>
+                window.location.href = "@Model.PostLogoutRedirectUri";
+            </text>
+        }
+    }
+</script>
+<div >
+@if (!Model.AutomaticRedirectAfterSignOut)
+{
+        <h2>@ViewData["Title"]</h2>
+        <p>
+            You have successfully signed out.
+        </p>
+
+        @if (Model.PostLogoutRedirectUri != null)
+        {
+            <div>
+                Click <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">here</a> to return to the
+                <span>@Model.ClientName</span> application.
+            </div>
+        }
+}
+@if (Model.SignOutIframeUrl != null)
+{
+    <iframe width="0" height="0" class="signout" src="@Model.SignOutIframeUrl" onload='redirect_page();'></iframe>
+}
+else
+{
+    <script>
+        redirect_page();
+    </script>
+}
+</div>
