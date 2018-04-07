@@ -10,7 +10,7 @@ from Ben's presentation into a set of three open source projects. These projects
 
 # The templates
 `OidcTempate` consists of the following three AspNet Core applications:
-* `OidcTemplate.Auth`. This is the token server application that is using IdentityServer4. It was created with the command `dotnet new mvc --auth individual`. The project was then extended with IdentityServer4, IdentityServer4.EntityFramework, migrations, profile service, etc.
+* `OidcTemplate.Auth`. This is the token server application that is using IdentityServer4. It was created with the command `dotnet new razor --auth individual`. The project was then extended with IdentityServer4, IdentityServer4.EntityFramework, migrations, profile service, etc.
 * `OidcTemplate.Client`. This is the angular web application. It was created with the command `dotnet new angular`. We added the authentication layer to the Mvc part of the project, as explained in Ben's presentation. We also moved the SampleDataController controller to the api project (see below). To the Angular web app, we added the portal service to get access to the authentication information, like the access token and username, and we added the authenticated-http service, which adds a bearer token to http requests and deals with refreshing the access tokens.
 * `OidcTemplate.Api`. This is the api project. It was created with the command `dotnet new webapi`. We added the authentication layer from Ben's presentation. Furthermore, we replaced the default ValuesController controller with the SampleDataController from the client project. To this controller we added the `Authorize(Policy = DomainPolicies.NormalUser)` attribute to prevent access to unauthorized clients.
 
