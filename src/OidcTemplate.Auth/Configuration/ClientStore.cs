@@ -53,6 +53,7 @@ namespace OpenSoftware.OidcTemplate.Auth.Configuration
                 AbsoluteRefreshTokenLifetime = 157700000, // 5 years. TODO: Consider better approach
                 AccessTokenLifetime = 3600,
                 AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+                FrontChannelLogoutUri = $"{_domainSettings.Client.Url}/signout-oidc",
 
                 ClientSecrets = new List<Secret>
                 {
