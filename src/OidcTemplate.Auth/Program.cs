@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
 using OpenSoftware.OidcTemplate.Auth.DatabaseSeed;
 using Serilog;
 using Serilog.Events;
@@ -26,21 +25,16 @@ namespace OpenSoftware.OidcTemplate.Auth
                     "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}"
                 )
                 .CreateLogger();
-
-            var host = BuildWebHost(args);
-            host.SeedDatabase();
-            host.Run();
+            var webHost = CreateWebHostBuilder(args).Build();
+            webHost.SeedDatabase();
+            webHost.Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseSerilog()
                 .UseUrls("http://localhost:5000")
-                .ConfigureLogging(builder =>
-                {
-                    builder.ClearProviders();
-                    builder.AddSerilog();
-                })
-                .Build();
+ ;
     }
 }
