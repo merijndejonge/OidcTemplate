@@ -13,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenSoftware.OidcTemplate.Auth.Certificates;
 using OpenSoftware.OidcTemplate.Auth.Configuration;
 using OpenSoftware.OidcTemplate.Auth.DatabaseSeed;
-using OpenSoftware.OidcTemplate.Auth.Services;
 using OpenSoftware.OidcTemplate.Data;
 using OpenSoftware.OidcTemplate.Domain.Configuration;
 using OpenSoftware.OidcTemplate.Domain.Entities;
@@ -23,7 +22,6 @@ namespace OpenSoftware.OidcTemplate.Auth
     public class Startup
     {
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly int _sslPort = 443;
 
         public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
@@ -36,10 +34,7 @@ namespace OpenSoftware.OidcTemplate.Auth
                     .SetBasePath(hostingEnvironment.ContentRootPath)
                     .AddJsonFile(Path.Combine("Properties", "launchSettings.json"))
                     .Build();
-                // During development we won't be using port 443
-                _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress:sslPort");
             }
-
         }
 
         public IConfiguration Configuration { get; }
@@ -64,7 +59,6 @@ namespace OpenSoftware.OidcTemplate.Auth
             var connectionString = appSettings.ConnectionStrings.AuthContext;
             var migrationsAssembly = typeof(DataModule).GetTypeInfo().Assembly.GetName().Name;
 
-
             services.AddDbContext<IdentityContext>(o => o.UseSqlServer(connectionString,
                 optionsBuilder =>
                     optionsBuilder.MigrationsAssembly(migrationsAssembly)));
@@ -74,15 +68,16 @@ namespace OpenSoftware.OidcTemplate.Auth
                     options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 6;
+                    options.Password.RequiredLength = 8;
                 })
                 .AddEntityFrameworkStores<IdentityContext>()
+                .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
             services.AddIdentityServer(options =>
                 {
-                    options.UserInteraction.LoginUrl = "/Account/login";
-                    options.UserInteraction.LogoutUrl = "/Account/logout";
+                    options.UserInteraction.LoginUrl = "/Account/Login";
+                    options.UserInteraction.LogoutUrl = "/Account/Logout";
                 })
                 // Replace with your certificate's thumbPrint, path, and password
                 .AddSigningCredential(
@@ -107,8 +102,7 @@ namespace OpenSoftware.OidcTemplate.Auth
 
             services.AddMvc(options =>
                 {
-                    //options.Filters.Add(new RequireHttpsAttribute());
-//                    options.SslPort = _sslPort;
+                    options.Filters.Add(new RequireHttpsAttribute());
                 })
                 .AddRazorPagesOptions(options =>
                 {
@@ -116,9 +110,6 @@ namespace OpenSoftware.OidcTemplate.Auth
                     options.Conventions.AuthorizePage("/Account/Logout");
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            // Register no-op EmailSender used by account confirmation and password reset during development
-            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
-            services.AddSingleton<IEmailSender, EmailSender>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IClientStore, ClientStore>();
             services.AddScoped<ISeedAuthService, SeedAuthService>();

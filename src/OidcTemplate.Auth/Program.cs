@@ -34,7 +34,6 @@ namespace OpenSoftware.OidcTemplate.Auth
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseSerilog()
-                .UseUrls("http://localhost:5000")
- ;
+        ;
     }
 }
