@@ -42,8 +42,9 @@ namespace OpenSoftware.OidcTemplate.Auth
             });
 
             var domainSettings = new DomainSettings();
-            Configuration.GetSection(nameof(DomainSettings)).Bind(domainSettings);
-            services.Configure<DomainSettings>(options => Configuration.GetSection(nameof(DomainSettings)).Bind(options));
+            var section = Configuration.GetSection(nameof(DomainSettings));
+            section.Bind(domainSettings);
+            services.Configure<DomainSettings>(options => section.Bind(options));
 
             var appSettings = new AppSettings();
             Configuration.GetSection(nameof(AppSettings)).Bind(appSettings);
