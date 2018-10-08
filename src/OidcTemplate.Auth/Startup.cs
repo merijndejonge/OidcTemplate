@@ -27,14 +27,6 @@ namespace OpenSoftware.OidcTemplate.Auth
         {
             _hostingEnvironment = hostingEnvironment;
             Configuration = configuration;
-
-            if (hostingEnvironment.IsDevelopment())
-            {
-                var launchConfiguration = new ConfigurationBuilder()
-                    .SetBasePath(hostingEnvironment.ContentRootPath)
-                    .AddJsonFile(Path.Combine("Properties", "launchSettings.json"))
-                    .Build();
-            }
         }
 
         public IConfiguration Configuration { get; }
