@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OidcTemplate.Data", "src\Oi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OidcTemplate.Domain", "src\OidcTemplate.Domain\OidcTemplate.Domain.csproj", "{B8646FC7-CD80-43B9-9C04-D74D10D3CCA5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OidcTemplate.Api", "src\OidcTemplate.Api\OidcTemplate.Api.csproj", "{F4E92325-4B57-4D5A-B00A-E7B343932B15}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OidcTemplate.Client", "src\OidcTemplate.Client\OidcTemplate.Client.csproj", "{739F93C6-B0D5-46B9-9C2A-9F7C3FD0305C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{B8646FC7-CD80-43B9-9C04-D74D10D3CCA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8646FC7-CD80-43B9-9C04-D74D10D3CCA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8646FC7-CD80-43B9-9C04-D74D10D3CCA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E92325-4B57-4D5A-B00A-E7B343932B15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E92325-4B57-4D5A-B00A-E7B343932B15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E92325-4B57-4D5A-B00A-E7B343932B15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E92325-4B57-4D5A-B00A-E7B343932B15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{739F93C6-B0D5-46B9-9C2A-9F7C3FD0305C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{739F93C6-B0D5-46B9-9C2A-9F7C3FD0305C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{739F93C6-B0D5-46B9-9C2A-9F7C3FD0305C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{739F93C6-B0D5-46B9-9C2A-9F7C3FD0305C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

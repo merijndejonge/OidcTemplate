@@ -69,8 +69,8 @@ namespace OpenSoftware.OidcTemplate.Auth
 
             services.AddIdentityServer(options =>
                 {
-                    options.UserInteraction.LoginUrl = "/Account/Login";
-                    options.UserInteraction.LogoutUrl = "/Account/Logout";
+                    options.UserInteraction.LoginUrl = "/Identity/Account/Login";
+                    options.UserInteraction.LogoutUrl = "/Identity/Account/Logout";
                 })
                 // Replace with your certificate's thumbPrint, path, and password
                 .AddSigningCredential(

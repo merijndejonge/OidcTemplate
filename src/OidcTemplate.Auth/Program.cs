@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using OpenSoftware.OidcTemplate.Auth.DatabaseSeed;
@@ -34,6 +35,10 @@ namespace OpenSoftware.OidcTemplate.Auth
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseSerilog()
-        ;
+                .UseKestrel(options =>
+                {
+                    options.Listen(IPAddress.Loopback, 5100);
+                    options.Listen(IPAddress.Loopback, 5000, listenOptions => { listenOptions.UseHttps(); });
+                });
     }
 }

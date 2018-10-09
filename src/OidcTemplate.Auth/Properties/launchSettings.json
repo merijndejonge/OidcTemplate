@@ -17,6 +17,8 @@
     "OidcTemplate.Auth": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "identity/account/login",
+
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
