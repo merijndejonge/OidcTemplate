@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
@@ -26,18 +26,17 @@ namespace OpenSoftware.OidcTemplate.Api
                 )
                 .CreateLogger();
 
-            BuildWebHost(args).Run();
+
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:5001")
-                .ConfigureLogging(builder =>
+                .UseSerilog().UseKestrel(options =>
                 {
-                    builder.ClearProviders();
-                    builder.AddSerilog();
-                })
-                .Build();
+                    options.Listen(IPAddress.Loopback, 5101);
+                    options.Listen(IPAddress.Loopback, 5001, listenOptions => { listenOptions.UseHttps(); });
+                });
     }
 }

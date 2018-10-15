@@ -1,12 +1,12 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Threading.Tasks;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenSoftware.OidcTemplate.Domain.Authentication;
@@ -16,21 +16,9 @@ namespace OpenSoftware.OidcTemplate.Client
 {
     public class Startup
     {
-        private readonly int _sslPort = 443;
-
-        public Startup(IHostingEnvironment env, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            if (env.IsDevelopment())
-            {
-                var launchConfiguration = new ConfigurationBuilder()
-                    .SetBasePath(env.ContentRootPath)
-                    .AddJsonFile(Path.Combine("Properties", "launchSettings.json"))
-                    .Build();
-                // During development we won't be using port 443
-                _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress:sslPort");
-            }
-
         }
 
         public IConfiguration Configuration { get; }
@@ -43,9 +31,12 @@ namespace OpenSoftware.OidcTemplate.Client
             section.Bind(domainSettings);
             services.Configure<DomainSettings>(options => section.Bind(options));
 
-            services.AddMvc(options => options.SslPort = _sslPort);
-
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
 
             services.AddAuthentication(
                     options =>
@@ -69,7 +60,7 @@ namespace OpenSoftware.OidcTemplate.Client
                     options.Scope.Add(IdentityServerConstants.StandardScopes.OpenId);
                     options.Scope.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
                     options.GetClaimsFromUserInfoEndpoint = true;
-                    
+
                     options.Scope.Add(domainSettings.Api.Id);
                     options.Scope.Add(DomainScopes.Roles);
                     options.Scope.Add(DomainScopes.MvcClientUser);
@@ -80,7 +71,7 @@ namespace OpenSoftware.OidcTemplate.Client
                         OnRemoteFailure = context =>
                         {
                             Console.WriteLine(context.Failure.Message +
-                                              " Failiure during authentication - Remote failure.");
+                                              " Failure during authentication - Remote failure.");
                             return Task.FromResult(0);
                         }
                     };
@@ -90,33 +81,38 @@ namespace OpenSoftware.OidcTemplate.Client
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true
-                });
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
             app.UseAuthentication();
 
             app.UseStaticFiles();
-
+            app.UseSpaStaticFiles();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
 
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ClientApp";
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
         }
     }

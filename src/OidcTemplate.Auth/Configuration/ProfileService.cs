@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace OpenSoftware.OidcTemplate.Auth.Configuration
             await base.GetProfileDataAsync(context);
 
             var userData = _context.Users.FirstOrDefault(x => x.Id == context.Subject.FindFirstValue(JwtClaimTypes.Subject));
+            Debug.Assert(userData != null, nameof(userData) + " != null");
 
             var userName = userData.FirstName.IsNullOrEmpty() || userData.LastName.IsNullOrEmpty()
                 ? userData.Email

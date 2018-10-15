@@ -25,13 +25,12 @@ namespace OpenSoftware.OidcTemplate.Client
                 )
                 .CreateLogger();
 
-            BuildWebHost(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:5002")
-                .Build();
+                .UseSerilog();
     }
 }

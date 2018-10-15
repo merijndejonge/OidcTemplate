@@ -5,7 +5,6 @@ using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.Extensions.Options;
-using OpenSoftware.OidcTemplate.Data;
 using OpenSoftware.OidcTemplate.Domain.Authentication;
 using OpenSoftware.OidcTemplate.Domain.Configuration;
 
@@ -13,12 +12,10 @@ namespace OpenSoftware.OidcTemplate.Auth.Configuration
 {
     public class ClientStore : IClientStore
     {
-        private readonly IdentityContext _context;
         private readonly DomainSettings _domainSettings;
 
-        public ClientStore(IdentityContext context, IOptions<DomainSettings> domainSettings)
+        public ClientStore(IOptions<DomainSettings> domainSettings)
         {
-            _context = context;
             _domainSettings = domainSettings.Value;
         }
 

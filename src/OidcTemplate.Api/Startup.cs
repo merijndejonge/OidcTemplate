@@ -1,8 +1,7 @@
-﻿using System.IO;
-using IdentityModel;
-using Microsoft.ApplicationInsights.Extensibility;
+﻿using IdentityModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenSoftware.OidcTemplate.Domain.Authentication;
@@ -12,22 +11,8 @@ namespace OpenSoftware.OidcTemplate.Api
 {
     public class Startup
     {
-        private readonly int _sslPort =  443;
-
-        public Startup(IHostingEnvironment env, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
-            TelemetryConfiguration.Active.DisableTelemetry = true;
-
-            if (env.IsDevelopment())
-            {
-                var launchConfiguration = new ConfigurationBuilder()
-                    .SetBasePath(env.ContentRootPath)
-                    .AddJsonFile(Path.Combine("Properties", "launchSettings.json"))
-                    .Build();
-                // During development we won't be using port 443
-                _sslPort = launchConfiguration.GetValue<int>("iisSettings::iisExpress::sslPort");
-            }
-
             Configuration = configuration;
         }
 
@@ -41,19 +26,12 @@ namespace OpenSoftware.OidcTemplate.Api
             section.Bind(domainSettings);
             services.Configure<DomainSettings>(options => section.Bind(options));
 
-
-            services.AddApplicationInsightsTelemetry(Configuration);
-
-            services.AddMvcCore(options =>
-                {
-                    // options.Conventions.Insert(0, new ModeRouteConvention());
-                    //                options.Filters.Add(new RequireHttpsAttribute());
-                    options.SslPort = _sslPort;
-                })
+            services
+                .AddMvcCore()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddAuthorization()
-                .AddJsonFormatters();
-
-
+                .AddJsonFormatters()
+                ;
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
@@ -72,12 +50,12 @@ namespace OpenSoftware.OidcTemplate.Api
                         .AllowAnyMethod();
                 });
             });
-
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(DomainPolicies.NormalUser,
                     policy => policy.RequireClaim(JwtClaimTypes.Scope, DomainScopes.MvcClientUser));
-                options.AddPolicy(DomainPolicies.Admin, policy => policy.RequireClaim(JwtClaimTypes.Role, DomainRoles.Admin));
+                options.AddPolicy(DomainPolicies.Admin,
+                    policy => policy.RequireClaim(JwtClaimTypes.Role, DomainRoles.Admin));
             });
         }
 
@@ -88,7 +66,12 @@ namespace OpenSoftware.OidcTemplate.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
+            app.UseHttpsRedirection();
             app.UseCors("default");
             app.UseAuthentication();
             app.UseMvc();
