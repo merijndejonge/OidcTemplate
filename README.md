@@ -1,4 +1,7 @@
 # Description
+
+_OidcTemplate has been updated to support Asp.net Core 2.1_
+
 This project forms a template project for setting-up an application with Asp.Net Core, IdentityServer4, and Angular. The code is based on real production code as presented by Ben Cull on his [NDC presentation on July 16, 2017 in Oslo](https://youtu.be/3rtq8M1s95c).
 
 During his presentation, Ben gave an excellent tour through his application, explaining how to set up Identity Server 4 in an ASP.NET Core app as a token server, Entity Framework and ASP.NET Identity for security, ASP.NET Core MVC for an API and an Angular SPA application.
